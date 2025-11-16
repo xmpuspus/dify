@@ -4,11 +4,13 @@
 
 Dify is an open-source platform for developing LLM applications with an intuitive interface combining agentic AI workflows, RAG pipelines, agent capabilities, and model management.
 
+**Current Version:** 1.10.0
+
 **Key Technologies:**
-- Backend: Python 3.11-3.12, Flask 3.1, SQLAlchemy 2.0, Celery 5.5
-- Frontend: Next.js 15, React 19, TypeScript 5.9
+- Backend: Python 3.11-3.12, Flask 3.1.2, SQLAlchemy 2.0.29, Celery 5.5.2
+- Frontend: Next.js 15.5, React 19.1, TypeScript 5.9.3, Node.js >=22.11.0
 - Data: PostgreSQL with pgvector, Redis, 20+ vector database integrations
-- Package Managers: UV (Python), pnpm (Node.js)
+- Package Managers: UV (Python backend), pnpm 10.22.0 (Node.js frontend)
 
 ## Repository Structure
 
@@ -561,11 +563,26 @@ make lint  # Includes import linter checks
 
 **Queue System:**
 - Broker: Redis
-- Queues: `dataset`, `workflow`, `mail`, `ops_trace`
+- Main Queues:
+  - `dataset` - RAG indexing and document processing
+  - `workflow` - Workflow triggers (community edition)
+  - `mail` - Email notifications
+  - `ops_trace` - Operations tracing
+  - `app_deletion` - Application cleanup
+  - `plugin` - Plugin operations
+  - `workflow_storage` - Workflow storage tasks
+  - `conversation` - Conversation tasks
+  - `priority_pipeline`, `pipeline` - Pipeline task processing
+  - `schedule_poller`, `schedule_executor` - Scheduled task management
+  - `triggered_workflow_dispatcher`, `trigger_refresh_executor` - Trigger management
 
 **Starting Worker:**
 ```bash
 dev/start-worker --queues dataset,workflow
+# Or with concurrency:
+dev/start-worker --queues dataset,workflow --concurrency 4
+# Or let it auto-configure based on edition:
+dev/start-worker
 ```
 
 **Task Organization:**
